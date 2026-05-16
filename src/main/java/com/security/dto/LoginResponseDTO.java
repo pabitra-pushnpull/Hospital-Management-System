@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class LoginResponseDTO {
 
 	private String jwt;
-    private Long id;
+    private Long userId;
 	
 }

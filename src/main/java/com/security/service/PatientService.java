@@ -26,9 +26,11 @@ public class PatientService {
 	private final ModelMapper mapper;
 	
 	@Transactional
-	public PatientResponseDTO getPatientById(Integer patient_id) {
+	public PatientResponseDTO getPatientById(Long patientId) {
 		
-		PatientModel existedPatient = patientRepository.findById(patient_id).orElseThrow(()-> new EntityNotFoundException("Id not found !"));     
+		PatientModel existedPatient = patientRepository
+										.findById(patientId)
+										.orElseThrow(()-> new EntityNotFoundException("Id not found !"));     
 		
 		return mapper.map(existedPatient, PatientResponseDTO.class); 
 		// .map method helps to converts the Entity to its DTO
@@ -39,7 +41,8 @@ public class PatientService {
 	public List<PatientResponseDTO> getAllPatients(Integer pageNumber, Integer pageSize) {
 		
 		return patientRepository.findAllPatients(PageRequest.of(pageNumber, pageSize))
-				.stream().map(patient -> mapper.map(patient, PatientResponseDTO.class))
+				.stream()
+				.map(patient -> mapper.map(patient, PatientResponseDTO.class))
 				.collect(Collectors.toList());
 		
 //        return patientRepository.findAllPatients(PageRequest.of(pageNumber, pageSize))

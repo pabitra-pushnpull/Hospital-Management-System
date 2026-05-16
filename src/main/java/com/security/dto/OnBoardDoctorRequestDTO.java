@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class OnBoardDoctorRequestDTO {
 
-	private Long user_id;
+	private Long userId;
     private String name;
     private String specialization;
 	

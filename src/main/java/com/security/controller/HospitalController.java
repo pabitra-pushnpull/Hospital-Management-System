@@ -1,42 +1,28 @@
 package com.security.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.security.dto.AppointmentResponseDTO;
-import com.security.dto.CreateAppointmentRequestDTO;
-import com.security.dto.PatientResponseDTO;
-import com.security.service.AppointmentService;
-import com.security.service.PatientService;
+import com.security.dto.DoctorResponseDTO;
+import com.security.service.DoctorService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/patients")
+@RequestMapping("/public")
 @RequiredArgsConstructor
 public class HospitalController {
 
-	@Autowired
-	private final PatientService patientService;
-	    
-	@Autowired
-	private final AppointmentService appointmentService;
-
-	    @PostMapping("/appointments")
-	    public ResponseEntity<AppointmentResponseDTO> createNewAppointment(@RequestBody CreateAppointmentRequestDTO createAppointmentRequestDto) {
-	        return ResponseEntity.status(HttpStatus.CREATED).body(appointmentService.createAppointment(createAppointmentRequestDto));
-	    }
-
-	    @GetMapping("/profile")
-	    private ResponseEntity<PatientResponseDTO> getPatientProfile() {
-	        Integer patientId = 4 /*= 4L*/;
-	        return ResponseEntity.ok(patientService.getPatientById(patientId));
-	    }
+	private final DoctorService doctorService;
+	
+	@GetMapping("/doctors")
+	public ResponseEntity<List<DoctorResponseDTO>> getAllDoctors() throws Exception {
+		
+		return ResponseEntity.ok(doctorService.getAllDoctors());
+	}
 	
 }

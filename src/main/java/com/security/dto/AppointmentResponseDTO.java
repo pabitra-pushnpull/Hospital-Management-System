@@ -8,7 +8,7 @@ import lombok.Data;
 public class AppointmentResponseDTO {
 
 	private Long patientId;
-    private LocalDateTime dateTime;
+    private LocalDateTime appointmentTime;
     private String reason;
     private DoctorResponseDTO doctor;
 	

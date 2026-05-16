@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.security.dto.DoctorResponseDTO;
 import com.security.dto.OnBoardDoctorRequestDTO;
 import com.security.model.DoctorModel;
+import com.security.model.UserModel;
+import com.security.model.type.RoleType;
 import com.security.repository.DoctorRepository;
 import com.security.repository.UserRepository;
 
@@ -31,27 +33,32 @@ public class DoctorService {
 	
 	public List<DoctorResponseDTO> getAllDoctors() throws Exception {
 		
-		return doctorRepository.findAll().stream().map(doctor -> modelMapper.map(doctor, DoctorResponseDTO.class))
+		return doctorRepository.findAll()
+				.stream()
+				.map(doctor -> modelMapper.map(doctor, DoctorResponseDTO.class))
 				.collect(Collectors.toList());
 	}
 	
 	@Transactional
-	public DoctorResponseDTO registerDoctor(OnBoardDoctorRequestDTO requestDTO) throws Exception {
+	public DoctorResponseDTO onBoardNewDoctor(OnBoardDoctorRequestDTO requestDTO) throws Exception {
 		
-		Integer userId = requestDTO.getUser_id();
+		Long userId = requestDTO.getUserId();
 		
-		userRepository.findById(userId).orElseThrow(() ->
-		new RuntimeException("User Already Exists !"));
+		UserModel userFound = userRepository.findById(userId)
+			.orElseThrow(() -> new RuntimeException("User Already Exists !"));
 		
-		if (!doctorRepository.existsById(userId)) {
+		if (doctorRepository.existsById(userId)) {
 			
 			throw new IllegalArgumentException("Doctor Already Exists !");
 		}
 		
 		  DoctorModel doctor = DoctorModel.builder().
 			 doctor_name(requestDTO.getName())
-			 .specialization(requestDTO.getSpecialization()).build();
-								
+			 .specialization(requestDTO.getSpecialization())
+			 .user(userFound)
+			 .build();
+						
+		  userFound.getRole_type().add(RoleType.DOCTOR);
 		  return modelMapper.map(doctorRepository.save(doctor), DoctorResponseDTO.class);
 		
 	}

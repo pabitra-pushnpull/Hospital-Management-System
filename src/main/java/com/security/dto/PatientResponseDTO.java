@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 public class PatientResponseDTO {
 
-	private Long patient_id;
+	private Long patientId;
     private String name;
     private String gender;
-    private LocalDate birth_date;
-    private BloodGroupType blood_group;
+    private LocalDate birthDate;
+    private BloodGroupType bloodGroup;
 	
 }

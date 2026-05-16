@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.security.dto.AppointmentResponseDTO;
@@ -44,14 +45,14 @@ public class AppointmentService {
 		Long doctorId = appointmentRequestDTO.getDoctorId();
 		
 		PatientModel existingPatient = patientRepository.findById(patientId)
-								.orElseThrow(()-> new RuntimeException("Patient not found for"));
+								.orElseThrow(()-> new RuntimeException("Patient not found for id : " + patientId));
 		
 		DoctorModel existingDoctor = doctorRepository.findById(doctorId)
-								.orElseThrow(()-> new RuntimeException("Doctor not found for id :"));
+								.orElseThrow(()-> new RuntimeException("Doctor not found for id : " + doctorId));
 		
 		AppointmentModel appointment = AppointmentModel.builder()
 										.reason(appointmentRequestDTO.getReason())
-										.appointment_time(appointmentRequestDTO.getAppointment_time())
+										.appointment_time(appointmentRequestDTO.getAppointmentTime())
 										.build();
 		
 		appointment.setPatient(existingPatient);
@@ -65,6 +66,9 @@ public class AppointmentService {
 		
 	}
 	
+	
+	@Transactional
+	@PreAuthorize("hasAuthority('appointment:write') or #doctorId == authentication.principal.id")
 	public AppointmentModel reAssignAppointmentToAnotherDoctor(Long appointmentId, Long doctorId){
 		
         AppointmentModel appointment = appointmentRepository.findById(appointmentId).orElseThrow();
@@ -77,6 +81,8 @@ public class AppointmentService {
         return appointment;
     }
 	
+	
+	@PreAuthorize("hasRole('ADMIN') OR (hasRole('DOCTOR') AND #doctorId == authentication.principal.id)")
 	public List<AppointmentResponseDTO> getAllAppointmentsOfDoctor(Long doctorId) {
         DoctorModel existingDoctor = doctorRepository.findById(doctorId).orElseThrow();
 

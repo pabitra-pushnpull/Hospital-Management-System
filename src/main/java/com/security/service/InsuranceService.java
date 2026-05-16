@@ -22,7 +22,7 @@ public class InsuranceService {
 	private final PatientRepository patientRepository;
 
     @Transactional
-    public PatientModel assignInsuranceToPatient(InsuranceModel insurance, Integer patientId) {
+    public PatientModel assignInsuranceToPatient(InsuranceModel insurance, Long patientId) {
         PatientModel patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found with id: " + patientId));
 
@@ -33,7 +33,7 @@ public class InsuranceService {
     }
 
     @Transactional
-    public PatientModel disaccociateInsuranceFromPatient(Integer patientId) {
+    public PatientModel disaccociateInsuranceFromPatient(Long patientId) {
         PatientModel patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found with id: " + patientId));
 
