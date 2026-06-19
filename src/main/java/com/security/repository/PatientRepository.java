@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.security.dto.BloodGroupCountResponseDTO;
 import com.security.model.PatientModel;
 import com.security.model.type.BloodGroupType;
 
@@ -31,8 +32,9 @@ public interface PatientRepository extends JpaRepository<PatientModel, Long> {
 	@Query("SELECT p FROM patients p WHERE p.birth_date > :birth_date")
 	List<PatientModel> findByBornAfterDate(@Param("birth_date") LocalDate birthDate);
 	
-//	@Query("") -- [incomplete ???]
-//	List<BloodGroupCountResponseDTO> countEachBloodGroupType();
+	@Query("select new com.security.dto.BloodGroupCountResponseDTO(p.blood_group, Count(p))"+
+			" from Patients p group by p.blood_group")
+	List<BloodGroupCountResponseDTO> countEachBloodGroupType();
 	
 	@Query(value = "select * from patient", nativeQuery = true)
     Page<PatientModel> findAllPatients(Pageable pageable);

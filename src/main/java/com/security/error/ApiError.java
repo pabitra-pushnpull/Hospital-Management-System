@@ -14,8 +14,8 @@ public class ApiError {
 	 private HttpStatus statusCode;
 	 
 	 
-	 public ApiError(LocalDateTime timeStamp) {
-		this.timeStamp = timeStamp;
+	 public ApiError() {
+		this.timeStamp = LocalDateTime.now();
 	 }
 
 
